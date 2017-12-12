@@ -17,13 +17,20 @@
 package com.example.android.persistence.ui;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.android.persistence.R;
+import com.example.android.persistence.Viper.DemoProtocol;
+import com.example.android.persistence.Viper.MainViperModule;
+import com.example.android.persistence.domain.interactor.DemoInteractorImp;
 import com.example.android.persistence.model.Product;
+import com.example.android.persistence.presentation.presenter.DemoPresenter;
+import com.example.android.persistence.presentation.view.MainView;
+import com.mswim.architecture.BaseActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity<MainView, DemoProtocol.RouterInt, MainViperModule> implements MainView, DemoProtocol.RouterInt {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +45,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @NonNull
+    @Override
+    public MainViperModule createViperModule() {
+        DemoPresenter presenter = new DemoPresenter();
+        DemoInteractorImp interactor = new DemoInteractorImp();
+        interactor.setPresenterInt(presenter);
+        presenter.setInteractorInt(interactor);
+        MainViperModule mainViperModule = new MainViperModule();
+        mainViperModule.setPresenter(presenter);
+        mainViperModule.setInteractor(interactor);
+        return mainViperModule;
+    }
+
+
+    @Override
+    protected void onViperModulePrepared(MainViperModule presenter) {
+    }
+    @Override
+    protected int loaderId() {
+        return 0;
+    }
+
     /** Shows the product detail fragment */
     public void show(Product product) {
 
@@ -48,5 +77,15 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack("product")
                 .replace(R.id.fragment_container,
                         productFragment, null).commit();
+    }
+
+    @Override
+    public void showDatas(String data) {
+
+    }
+
+    @Override
+    public void goNextScreen() {
+
     }
 }
