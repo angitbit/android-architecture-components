@@ -20,6 +20,12 @@ public class DemoInteractorImp implements DemoProtocol.InteractorInput {
 //    private final CompositeDisposable disposables = new CompositeDisposable();
     private DemoProtocol.InteractorOutput presenterInt;
 
+//    private DemoProtocol.AacInteractorOutput mAacInteractorOutput;
+//
+//    public void setmAacInteractorOutput(DemoProtocol.AacInteractorOutput aacInteractorOutput){
+//        mAacInteractorOutput= aacInteractorOutput;
+//    }
+
     public DemoInteractorImp() {
     }
 
@@ -58,6 +64,8 @@ public class DemoInteractorImp implements DemoProtocol.InteractorInput {
 //                // Be notified on the main thread
 //                .observeOn(AndroidSchedulers.mainThread())
 //                .subscribeWith(getObserver()));
+
+        //pretend task will update AppDatabase in DataRepository, which will push livedata to view
     }
 
     public DemoProtocol.InteractorOutput getPresenterInt() {
