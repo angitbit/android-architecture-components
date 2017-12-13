@@ -31,6 +31,8 @@ import com.example.android.persistence.presentation.view.MainView;
 import com.mswim.architecture.BaseActivity;
 
 public class MainActivity extends BaseActivity<MainView, DemoProtocol.RouterInt, MainViperModule> implements MainView, DemoProtocol.RouterInt {
+    private ProductListFragment productListFragment;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,11 +40,19 @@ public class MainActivity extends BaseActivity<MainView, DemoProtocol.RouterInt,
 
         // Add product list fragment if this is first creation
         if (savedInstanceState == null) {
-            ProductListFragment fragment = new ProductListFragment();
-
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, fragment, ProductListFragment.TAG).commit();
+            makeListFrag();
+        } else {
+            productListFragment = (ProductListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         }
+    }
+
+    private void makeListFrag(){
+        ProductListFragment fragment = new ProductListFragment();
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, fragment, ProductListFragment.TAG).commit();
+
+        productListFragment = fragment;
     }
 
     @NonNull
@@ -52,9 +62,17 @@ public class MainActivity extends BaseActivity<MainView, DemoProtocol.RouterInt,
         DemoInteractorImp interactor = new DemoInteractorImp();
         interactor.setPresenterInt(presenter);
         presenter.setInteractorInt(interactor);
+
         MainViperModule mainViperModule = new MainViperModule();
         mainViperModule.setPresenter(presenter);
         mainViperModule.setInteractor(interactor);
+
+        if(productListFragment==null){
+            makeListFrag();
+        }
+        if(productListFragment!=null){
+            productListFragment.initViper(mainViperModule);
+        }
         return mainViperModule;
     }
 
