@@ -1,6 +1,9 @@
 package com.example.android.persistence.Viper;
 
+import com.example.android.persistence.model.Product;
 import com.mswim.architecture.viper.Router;
+
+import java.util.List;
 
 /**
  * Created by marcogalicia on 09/12/17.
@@ -23,6 +26,10 @@ public class DemoProtocol {
     public interface InteractorOutput {
         /* Interactor -> Presenter -- receive */
         void didRetrieveDatas(String datas);
+    }
+    public interface AacInteractorOutput {
+        /* Interactor -> Presenter -- receive */
+        void setProductList(final List<? extends Product> productList);
     }
 
     public interface RouterInt extends Router {

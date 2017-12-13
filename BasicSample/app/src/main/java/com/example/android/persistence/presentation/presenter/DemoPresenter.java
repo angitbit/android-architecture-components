@@ -1,16 +1,72 @@
 package com.example.android.persistence.presentation.presenter;
 
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
+import android.support.annotation.Nullable;
+
 import com.example.android.persistence.Viper.DemoProtocol;
+import com.example.android.persistence.databinding.ListFragmentBinding;
+import com.example.android.persistence.db.entity.ProductEntity;
+import com.example.android.persistence.model.Product;
 import com.example.android.persistence.presentation.view.MainView;
+import com.example.android.persistence.viewmodel.ProductListViewModel;
 import com.mswim.architecture.viper.BasePresenter;
+
+import java.util.List;
 
 /**
  * Created by marcogalicia on 01/05/17.
  */
 
-public class DemoPresenter extends BasePresenter<MainView, DemoProtocol.RouterInt> implements DemoProtocol.Presenter, DemoProtocol.InteractorOutput {
+public class DemoPresenter extends BasePresenter<MainView, DemoProtocol.RouterInt> implements DemoProtocol.Presenter, DemoProtocol.InteractorOutput,
+        DemoProtocol.AacInteractorOutput {
 
     private DemoProtocol.InteractorInput interactorInt;
+
+    private DemoProtocol.AacInteractorOutput mAacInteractorOutput;
+    private ProductListViewModel mproductListViewModel;
+    private ListFragmentBinding mBinding;
+
+    public void setVm(ProductListViewModel productListViewModel){
+        if(productListViewModel== null){
+            return;
+        }
+        mproductListViewModel= productListViewModel;
+    }
+    public void bindData(LifecycleOwner lifecycleOwner, ListFragmentBinding listFragmentBinding, DemoProtocol.AacInteractorOutput aacInteractorOutput){
+        if(listFragmentBinding== null){
+            return;
+        }
+        mBinding= listFragmentBinding;
+        if(mproductListViewModel!=null){
+            subscribeUi(mproductListViewModel, lifecycleOwner);
+        }
+        mAacInteractorOutput= aacInteractorOutput;
+    }
+
+    private void subscribeUi(ProductListViewModel viewModel, LifecycleOwner lifecycleOwner) {
+        // Update the list when the data changes
+        viewModel.getProducts().observe(lifecycleOwner, new Observer<List<ProductEntity>>() {
+            @Override
+            public void onChanged(@Nullable List<ProductEntity> myProducts) {
+                if (myProducts != null) {
+                    mBinding.setIsLoading(false); //xml data var
+                    setProductList(myProducts);
+                } else {
+                    mBinding.setIsLoading(true); //xml data var
+                }
+                // espresso does not know how to wait for data binding's loop so we execute changes
+                // sync.
+                mBinding.executePendingBindings();
+            }
+        });
+    }
+
+    public void setProductList(final List<? extends Product> productList) {
+        if(mAacInteractorOutput != null){
+            mAacInteractorOutput.setProductList(productList);
+        }
+    }
 
     public DemoPresenter() {
     }

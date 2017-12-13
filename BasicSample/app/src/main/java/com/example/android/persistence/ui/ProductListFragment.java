@@ -28,9 +28,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.persistence.R;
+import com.example.android.persistence.Viper.MainViperModule;
 import com.example.android.persistence.databinding.ListFragmentBinding;
 import com.example.android.persistence.db.entity.ProductEntity;
 import com.example.android.persistence.model.Product;
+import com.example.android.persistence.presentation.presenter.DemoPresenter;
 import com.example.android.persistence.viewmodel.ProductListViewModel;
 
 import java.util.List;
@@ -40,8 +42,17 @@ public class ProductListFragment extends Fragment {
     public static final String TAG = "ProductListViewModel";
 
     private ProductAdapter mProductAdapter;
-
     private ListFragmentBinding mBinding;
+
+    private DemoPresenter mpresenter;
+    private MainViperModule mainViperModule;
+
+    public void initViper(MainViperModule mainViperModule){
+        if(mainViperModule==null){
+            return;
+        }
+        mpresenter= mainViperModule.getPresenter();
+    }
 
     @Nullable
     @Override
@@ -50,6 +61,7 @@ public class ProductListFragment extends Fragment {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.list_fragment, container, false);
 
         mProductAdapter = new ProductAdapter(mProductClickCallback);
+        //productsList is id of a RecyclerView
         mBinding.productsList.setAdapter(mProductAdapter);
 
         return mBinding.getRoot();
@@ -61,26 +73,30 @@ public class ProductListFragment extends Fragment {
         final ProductListViewModel viewModel =
                 ViewModelProviders.of(this).get(ProductListViewModel.class);
 
-        subscribeUi(viewModel);
+        if(mpresenter!=null){
+            mpresenter.setVm(viewModel);
+            mpresenter.bindData(this, mBinding, mProductAdapter);
+        }
+//        subscribeUi(viewModel);
     }
 
-    private void subscribeUi(ProductListViewModel viewModel) {
-        // Update the list when the data changes
-        viewModel.getProducts().observe(this, new Observer<List<ProductEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<ProductEntity> myProducts) {
-                if (myProducts != null) {
-                    mBinding.setIsLoading(false);
-                    mProductAdapter.setProductList(myProducts);
-                } else {
-                    mBinding.setIsLoading(true);
-                }
-                // espresso does not know how to wait for data binding's loop so we execute changes
-                // sync.
-                mBinding.executePendingBindings();
-            }
-        });
-    }
+//    private void subscribeUi(ProductListViewModel viewModel) {
+//        // Update the list when the data changes
+//        viewModel.getProducts().observe(this, new Observer<List<ProductEntity>>() {
+//            @Override
+//            public void onChanged(@Nullable List<ProductEntity> myProducts) {
+//                if (myProducts != null) {
+//                    mBinding.setIsLoading(false); //xml data var
+//                    mProductAdapter.setProductList(myProducts);
+//                } else {
+//                    mBinding.setIsLoading(true); //xml data var
+//                }
+//                // espresso does not know how to wait for data binding's loop so we execute changes
+//                // sync.
+//                mBinding.executePendingBindings();
+//            }
+//        });
+//    }
 
     private final ProductClickCallback mProductClickCallback = new ProductClickCallback() {
         @Override

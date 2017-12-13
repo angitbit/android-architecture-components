@@ -23,6 +23,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.example.android.persistence.Viper.DemoProtocol;
 import com.example.android.persistence.databinding.ProductItemBinding;
 import com.example.android.persistence.model.Product;
 import com.example.android.persistence.R;
@@ -30,7 +31,8 @@ import com.example.android.persistence.R;
 import java.util.List;
 import java.util.Objects;
 
-public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
+public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder>
+        implements DemoProtocol.AacInteractorOutput {
 
     List<? extends Product> mProductList;
 
