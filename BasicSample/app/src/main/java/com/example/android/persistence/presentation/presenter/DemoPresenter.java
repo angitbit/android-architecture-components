@@ -2,7 +2,9 @@ package com.example.android.persistence.presentation.presenter;
 
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 import com.example.android.persistence.Viper.DemoProtocol;
 import com.example.android.persistence.databinding.ListFragmentBinding;
@@ -27,11 +29,11 @@ public class DemoPresenter extends BasePresenter<MainView, DemoProtocol.RouterIn
     private ProductListViewModel mproductListViewModel;
     private ListFragmentBinding mBinding;
 
-    public void setVm(ProductListViewModel productListViewModel){
-        if(productListViewModel== null){
+    public void initVm(DemoProtocol.View view){
+        if(view== null){
             return;
         }
-        mproductListViewModel= productListViewModel;
+        mproductListViewModel = ViewModelProviders.of(view.getViewModelFragment()).get(ProductListViewModel.class);
     }
     public void bindData(LifecycleOwner lifecycleOwner, ListFragmentBinding listFragmentBinding, DemoProtocol.AacInteractorOutput aacInteractorOutput){
         if(listFragmentBinding== null){

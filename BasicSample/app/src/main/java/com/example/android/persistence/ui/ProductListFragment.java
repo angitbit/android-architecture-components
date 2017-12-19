@@ -17,8 +17,6 @@
 package com.example.android.persistence.ui;
 
 import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,16 +26,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.persistence.R;
+import com.example.android.persistence.Viper.DemoProtocol;
 import com.example.android.persistence.Viper.MainViperModule;
 import com.example.android.persistence.databinding.ListFragmentBinding;
-import com.example.android.persistence.db.entity.ProductEntity;
 import com.example.android.persistence.model.Product;
 import com.example.android.persistence.presentation.presenter.DemoPresenter;
-import com.example.android.persistence.viewmodel.ProductListViewModel;
 
-import java.util.List;
-
-public class ProductListFragment extends Fragment {
+public class ProductListFragment extends Fragment implements DemoProtocol.View {
 
     public static final String TAG = "ProductListViewModel";
 
@@ -46,6 +41,10 @@ public class ProductListFragment extends Fragment {
 
     private DemoPresenter mpresenter;
     private MainViperModule mainViperModule;
+
+    public Fragment getViewModelFragment(){
+        return this;
+    }
 
     public void initViper(MainViperModule mainViperModule){
         if(mainViperModule==null){
@@ -70,11 +69,9 @@ public class ProductListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final ProductListViewModel viewModel =
-                ViewModelProviders.of(this).get(ProductListViewModel.class);
 
         if(mpresenter!=null){
-            mpresenter.setVm(viewModel);
+            mpresenter.initVm(this);
             mpresenter.bindData(this, mBinding, mProductAdapter);
         }
 //        subscribeUi(viewModel);

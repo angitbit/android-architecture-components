@@ -1,5 +1,7 @@
 package com.example.android.persistence.Viper;
 
+import android.support.v4.app.Fragment;
+
 import com.example.android.persistence.model.Product;
 import com.mswim.architecture.viper.Router;
 
@@ -10,6 +12,9 @@ import java.util.List;
  */
 
 public class DemoProtocol {
+    public interface View{
+        Fragment getViewModelFragment();
+    }
 
     /* View -> Presenter */
     public interface Presenter {
