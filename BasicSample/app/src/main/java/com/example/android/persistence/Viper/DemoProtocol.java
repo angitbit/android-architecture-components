@@ -1,7 +1,11 @@
 package com.example.android.persistence.Viper;
 
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.LiveData;
 import android.support.v4.app.Fragment;
 
+import com.example.android.persistence.databinding.ListFragmentBinding;
+import com.example.android.persistence.db.entity.ProductEntity;
 import com.example.android.persistence.model.Product;
 import com.mswim.architecture.viper.Router;
 
@@ -24,8 +28,10 @@ public class DemoProtocol {
     public interface InteractorInput {
         /* Presenter -> Interactor -- ask */
         void executeTask();
-
         void removeSubscription();
+
+        void bindData(LifecycleOwner lifecycleOwner, ListFragmentBinding listFragmentBinding, DemoProtocol.AacInteractorOutput aacInteractorOutput,
+                      LiveData<List<ProductEntity>> liveProdList);
     }
 
     public interface InteractorOutput {

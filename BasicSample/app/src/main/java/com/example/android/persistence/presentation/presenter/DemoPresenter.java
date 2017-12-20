@@ -20,14 +20,11 @@ import java.util.List;
  * Created by marcogalicia on 01/05/17.
  */
 
-public class DemoPresenter extends BasePresenter<MainView, DemoProtocol.RouterInt> implements DemoProtocol.Presenter, DemoProtocol.InteractorOutput,
-        DemoProtocol.AacInteractorOutput {
+public class DemoPresenter extends BasePresenter<MainView, DemoProtocol.RouterInt> implements DemoProtocol.Presenter, DemoProtocol.InteractorOutput {
 
     private DemoProtocol.InteractorInput interactorInt;
 
-    private DemoProtocol.AacInteractorOutput mAacInteractorOutput;
     private ProductListViewModel mproductListViewModel;
-    private ListFragmentBinding mBinding;
 
     public void initVm(DemoProtocol.View view){
         if(view== null){
@@ -39,34 +36,8 @@ public class DemoPresenter extends BasePresenter<MainView, DemoProtocol.RouterIn
         if(listFragmentBinding== null){
             return;
         }
-        mBinding= listFragmentBinding;
-        if(mproductListViewModel!=null){
-            subscribeUi(mproductListViewModel, lifecycleOwner);
-        }
-        mAacInteractorOutput= aacInteractorOutput;
-    }
-
-    private void subscribeUi(ProductListViewModel viewModel, LifecycleOwner lifecycleOwner) {
-        // Update the list when the data changes
-        viewModel.getProducts().observe(lifecycleOwner, new Observer<List<ProductEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<ProductEntity> myProducts) {
-                if (myProducts != null) {
-                    mBinding.setIsLoading(false); //xml data var
-                    setProductList(myProducts);
-                } else {
-                    mBinding.setIsLoading(true); //xml data var
-                }
-                // espresso does not know how to wait for data binding's loop so we execute changes
-                // sync.
-                mBinding.executePendingBindings();
-            }
-        });
-    }
-
-    public void setProductList(final List<? extends Product> productList) {
-        if(mAacInteractorOutput != null){
-            mAacInteractorOutput.setProductList(productList);
+        if(lifecycleOwner!=null && interactorInt!=null && mproductListViewModel!=null){
+            interactorInt.bindData(lifecycleOwner, listFragmentBinding, aacInteractorOutput, mproductListViewModel.getProducts());
         }
     }
 
