@@ -60,7 +60,7 @@ public class MainActivity extends BaseActivity<MainView, DemoProtocol.RouterInt,
     public MainViperModule createViperModule() {
         DemoPresenter presenter = new DemoPresenter();
         DemoInteractorImp interactor = new DemoInteractorImp();
-        interactor.setPresenterInt(presenter);
+//        interactor.setPresenterInt(presenter);
         presenter.setInteractorInt(interactor);
 
         MainViperModule mainViperModule = new MainViperModule();

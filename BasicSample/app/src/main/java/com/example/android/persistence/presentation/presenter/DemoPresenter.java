@@ -20,7 +20,7 @@ import java.util.List;
  * Created by marcogalicia on 01/05/17.
  */
 
-public class DemoPresenter extends BasePresenter<MainView, DemoProtocol.RouterInt> implements DemoProtocol.Presenter, DemoProtocol.InteractorOutput {
+public class DemoPresenter extends BasePresenter<MainView, DemoProtocol.RouterInt> implements DemoProtocol.Presenter {
 
     private DemoProtocol.InteractorInput interactorInt;
 
@@ -50,8 +50,7 @@ public class DemoPresenter extends BasePresenter<MainView, DemoProtocol.RouterIn
     }
 
     public void routerNextScreen() {
-        if (isViewAttached())
-            getRouter().goNextScreen();
+        getRouter().goNextScreen();
     }
 
     //This method only is executed when the activity is completely destroyed.
@@ -61,12 +60,6 @@ public class DemoPresenter extends BasePresenter<MainView, DemoProtocol.RouterIn
         if (getInteractorInt() != null)
             getInteractorInt().removeSubscription();
         super.onFinish();
-    }
-
-    @Override
-    public void didRetrieveDatas(String data) {
-        if (isViewAttached())
-            getView().showDatas(data);
     }
 
     public DemoProtocol.InteractorInput getInteractorInt() {

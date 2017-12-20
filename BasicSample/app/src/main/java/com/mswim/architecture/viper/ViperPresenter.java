@@ -9,12 +9,6 @@ import android.support.annotation.UiThread;
 public interface ViperPresenter<V extends ViperView, R extends Router> {
 
     @UiThread
-    void attachView(V view);
-
-    @UiThread
-    void detachView();
-
-    @UiThread
     void attachRouter(R view);
 
     @UiThread

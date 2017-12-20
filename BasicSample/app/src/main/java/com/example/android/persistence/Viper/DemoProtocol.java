@@ -34,10 +34,10 @@ public class DemoProtocol {
                       LiveData<List<ProductEntity>> liveProdList);
     }
 
-    public interface InteractorOutput {
-        /* Interactor -> Presenter -- receive */
-        void didRetrieveDatas(String datas);
-    }
+//    public interface InteractorOutput {
+//        /* Interactor -> Presenter -- receive */
+//        void didRetrieveDatas(String datas);
+//    }
     public interface AacInteractorOutput {
         /* Interactor -> Presenter -- receive */
         void setProductList(final List<? extends Product> productList);

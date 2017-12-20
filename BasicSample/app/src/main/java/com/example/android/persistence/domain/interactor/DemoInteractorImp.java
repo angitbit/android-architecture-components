@@ -29,7 +29,7 @@ public class DemoInteractorImp implements DemoProtocol.InteractorInput {
     private ListFragmentBinding mBinding;
 
 //    private final CompositeDisposable disposables = new CompositeDisposable();
-    private DemoProtocol.InteractorOutput presenterInt;
+//    private DemoProtocol.InteractorOutput presenterInt;
 
 //    private DemoProtocol.AacInteractorOutput mAacInteractorOutput;
 //
@@ -79,13 +79,13 @@ public class DemoInteractorImp implements DemoProtocol.InteractorInput {
         //pretend task will update AppDatabase in DataRepository, which will push livedata to view
     }
 
-    public DemoProtocol.InteractorOutput getPresenterInt() {
-        return presenterInt;
-    }
-
-    public void setPresenterInt(DemoProtocol.InteractorOutput presenterInt) {
-        this.presenterInt = presenterInt;
-    }
+//    public DemoProtocol.InteractorOutput getPresenterInt() {
+//        return presenterInt;
+//    }
+//
+//    public void setPresenterInt(DemoProtocol.InteractorOutput presenterInt) {
+//        this.presenterInt = presenterInt;
+//    }
 
     public void bindData(LifecycleOwner lifecycleOwner, ListFragmentBinding listFragmentBinding, DemoProtocol.AacInteractorOutput aacInteractorOutput,
                          LiveData<List<ProductEntity>> liveProdList){
