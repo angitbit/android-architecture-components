@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity<MainView, DemoProtocol.RouterInt,
     public MainViperModule createViperModule() {
         DemoPresenter presenter = new DemoPresenter();
         DemoInteractorImp interactor = new DemoInteractorImp();
-        interactor.setPresenterInt(presenter);
+//        interactor.setPresenterInt(presenter);
         presenter.setInteractorInt(interactor);
         MainViperModule mainViperModule = new MainViperModule();
         mainViperModule.setPresenter(presenter);
@@ -73,14 +73,12 @@ public class MainActivity extends BaseActivity<MainView, DemoProtocol.RouterInt,
     @Override
     protected void onResume() {
         super.onResume();
-        getViperModule().getPresenter().attachView(this);
         getViperModule().getPresenter().attachRouter(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        getViperModule().getPresenter().detachView();
         getViperModule().getPresenter().detachRouter();
     }
 

@@ -17,8 +17,6 @@
 package com.example.android.persistence.ui;
 
 import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,20 +26,32 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.persistence.R;
+import com.example.android.persistence.Viper.DemoProtocol;
+import com.example.android.persistence.Viper.MainViperModule;
 import com.example.android.persistence.databinding.ListFragmentBinding;
-import com.example.android.persistence.db.entity.ProductEntity;
 import com.example.android.persistence.model.Product;
-import com.example.android.persistence.viewmodel.ProductListViewModel;
+import com.example.android.persistence.presentation.presenter.DemoPresenter;
 
-import java.util.List;
-
-public class ProductListFragment extends Fragment {
+public class ProductListFragment extends Fragment implements DemoProtocol.View {
 
     public static final String TAG = "ProductListViewModel";
 
     private ProductAdapter mProductAdapter;
-
     private ListFragmentBinding mBinding;
+
+    private DemoPresenter mpresenter;
+    private MainViperModule mainViperModule;
+
+    public Fragment getViewModelFragment(){
+        return this;
+    }
+
+    public void initViper(MainViperModule mainViperModule){
+        if(mainViperModule==null){
+            return;
+        }
+        mpresenter= mainViperModule.getPresenter();
+    }
 
     @Nullable
     @Override
@@ -50,6 +60,7 @@ public class ProductListFragment extends Fragment {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.list_fragment, container, false);
 
         mProductAdapter = new ProductAdapter(mProductClickCallback);
+        //productsList is id of a RecyclerView
         mBinding.productsList.setAdapter(mProductAdapter);
 
         return mBinding.getRoot();
@@ -58,29 +69,31 @@ public class ProductListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final ProductListViewModel viewModel =
-                ViewModelProviders.of(this).get(ProductListViewModel.class);
 
-        subscribeUi(viewModel);
+        if(mpresenter!=null){
+            mpresenter.initVm(this);
+            mpresenter.bindData(this, mBinding, mProductAdapter);
+        }
+//        subscribeUi(viewModel);
     }
 
-    private void subscribeUi(ProductListViewModel viewModel) {
-        // Update the list when the data changes
-        viewModel.getProducts().observe(this, new Observer<List<ProductEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<ProductEntity> myProducts) {
-                if (myProducts != null) {
-                    mBinding.setIsLoading(false);
-                    mProductAdapter.setProductList(myProducts);
-                } else {
-                    mBinding.setIsLoading(true);
-                }
-                // espresso does not know how to wait for data binding's loop so we execute changes
-                // sync.
-                mBinding.executePendingBindings();
-            }
-        });
-    }
+//    private void subscribeUi(ProductListViewModel viewModel) {
+//        // Update the list when the data changes
+//        viewModel.getProducts().observe(this, new Observer<List<ProductEntity>>() {
+//            @Override
+//            public void onChanged(@Nullable List<ProductEntity> myProducts) {
+//                if (myProducts != null) {
+//                    mBinding.setIsLoading(false); //xml data var
+//                    mProductAdapter.setProductList(myProducts);
+//                } else {
+//                    mBinding.setIsLoading(true); //xml data var
+//                }
+//                // espresso does not know how to wait for data binding's loop so we execute changes
+//                // sync.
+//                mBinding.executePendingBindings();
+//            }
+//        });
+//    }
 
     private final ProductClickCallback mProductClickCallback = new ProductClickCallback() {
         @Override
